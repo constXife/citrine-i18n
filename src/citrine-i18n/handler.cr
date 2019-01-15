@@ -9,11 +9,12 @@ module Citrine
       def call(context : HTTP::Server::Context)
         if params_locale = context.params[PARAM_NAME]?
           parser = Citrine::I18n::Parser.new params_locale
-          compat = parser.compatible_language_from ::I18n.available_locales
         elsif languages = context.request.headers[HEADER]?
           parser = Citrine::I18n::Parser.new languages
-          compat = parser.compatible_language_from ::I18n.available_locales
         end
+
+        compat = parser.compatible_language_from ::I18n.available_locales if parser
+        context.locale = compat if compat
 
         call_next(context)
       end
