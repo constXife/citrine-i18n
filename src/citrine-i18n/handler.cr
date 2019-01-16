@@ -14,7 +14,12 @@ module Citrine
         end
 
         compat = parser.compatible_language_from ::I18n.available_locales if parser
-        context.locale = compat if compat
+
+        if compat
+          context.locale = compat
+        else
+          raise Amber::Exceptions::RouteNotFound.new(context.request)
+        end
 
         call_next(context)
       end
