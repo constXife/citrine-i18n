@@ -18,7 +18,7 @@ module Citrine
         if compat
           context.locale = compat
         elsif params_locale
-          raise Amber::Exceptions::RouteNotFound.new(context.request)
+#          raise Amber::Exceptions::RouteNotFound.new(context.request)
         end
 
         call_next(context)
