@@ -9,16 +9,15 @@ module Citrine
       def call(context : HTTP::Server::Context)
         if params_locale = context.params[PARAM_NAME]?
           parser = Citrine::I18n::Parser.new params_locale
-        elsif languages = context.request.headers[HEADER]?
-          parser = Citrine::I18n::Parser.new languages
-        end
+          compat = parser.compatible_language_from ::I18n.available_locales if parser
 
-        compat = parser.compatible_language_from ::I18n.available_locales if parser
-
-        if compat
-          context.locale = compat
-        elsif params_locale
-#          raise Amber::Exceptions::RouteNotFound.new(context.request)
+          if compat
+            context.locale = compat
+          else
+            raise Amber::Exceptions::RouteNotFound.new(context.request)
+          end
+        else
+          context.locale = ::I18n.default_locale
         end
 
         call_next(context)
