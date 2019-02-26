@@ -13,8 +13,6 @@ module Citrine
 
           if compat
             context.locale = compat
-          else
-            raise Amber::Exceptions::RouteNotFound.new(context.request)
           end
         else
           context.locale = ::I18n.default_locale
